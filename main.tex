@@ -1,0 +1,125 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[indonesian]{babel}
+\usepackage{amsmath,amsfonts,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{natbib}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{setspace}
+
+\doublespacing
+
+\title{\textbf{Praktik Terbaik dalam Perbandingan Arsitektur Deep Learning: Tinjauan Metodologis terhadap Pemilihan Fungsi Loss dan Desain Eksperimen}}
+
+\author{
+\textbf{[Nama Penulis]}\\
+\textit{[Afiliasi Institusi]}\\
+\textit{[Email]}
+}
+
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+Perbandingan yang valid antara arsitektur deep learning memerlukan standardisasi fungsi loss sebagai metrik utama, yang dilengkapi dengan desain eksperimen yang ketat, pengujian statistik yang tepat, dan kepatuhan terhadap standar akademik yang mapan. Penelitian ini mengkaji praktik terbaik dalam metodologi perbandingan arsitektur deep learning berdasarkan tinjauan komprehensif terhadap literatur akademik dan standar konferensi internasional. Temuan menunjukkan bahwa kegagalan metodologis tersebar luas, memengaruhi lebih dari 294 makalah di 17 bidang melalui kebocoran data saja. Namun, kerangka kerja yang mapan telah dikembangkan untuk memastikan perbandingan yang valid. Artikel ini merekomendasikan penggunaan fungsi loss standar (cross-entropy untuk klasifikasi, MSE untuk regresi) sebagai metrik perbandingan utama, implementasi kerangka kerja reproduksibilitas bertingkat, dan penerapan pengujian statistik non-parametrik untuk evaluasi signifikansi. Implementasi praktik-praktik ini akan secara signifikan meningkatkan reliabilitas hasil penelitian deep learning dan memajukan pemahaman ilmiah yang dapat dipercaya.
+\end{abstract}
+
+\textbf{Kata kunci:} deep learning, perbandingan arsitektur, metodologi eksperimen, fungsi loss, reproduksibilitas
+
+\section{Pendahuluan}
+
+Perbandingan arsitektur deep learning merupakan aspek fundamental dalam penelitian pembelajaran mesin yang memerlukan metodologi yang ketat untuk menghasilkan kesimpulan yang valid dan dapat dipercaya. Pemilihan fungsi loss yang tepat dalam perbandingan arsitektur telah menjadi perdebatan metodologis yang signifikan dalam komunitas penelitian, di mana praktik yang tidak konsisten dapat menghasilkan bias sistematis dan kesimpulan yang menyesatkan \citep{kapoor2022leakage}.
+
+Krisis reproduksibilitas dalam penelitian kecerdasan buatan dan pembelajaran mesin telah mendorong pengembangan standar evaluasi yang lebih ketat \citep{desai2025reproducibility}. Penelitian terbaru menunjukkan bahwa kegagalan metodologis, khususnya kebocoran data, telah memengaruhi ratusan publikasi di berbagai bidang \citep{kapoor2022leakage}. Hal ini menggarisbawahi pentingnya penerapan praktik terbaik dalam desain eksperimen dan evaluasi model.
+
+Konferensi-konferensi pembelajaran mesin terkemuka seperti NeurIPS, ICML, ICLR, dan AAAI telah mengimplementasikan kerangka kerja evaluasi komprehensif melalui persyaratan wajib dan inisiatif sistematis untuk meningkatkan standar penelitian. Namun, adopsi praktik terbaik ini masih belum merata di seluruh komunitas penelitian.
+
+Artikel ini bertujuan untuk menyediakan panduan metodologis komprehensif untuk perbandingan arsitektur deep learning yang valid, berdasarkan sintesis literatur akademik terkini dan standar konferensi internasional. Kontribusi utama penelitian ini meliputi: (1) analisis sistematis terhadap praktik pemilihan fungsi loss dalam perbandingan arsitektur, (2) kerangka kerja desain eksperimen yang ketat untuk benchmarking model, dan (3) rekomendasi implementasi standar akademik dan industri.
+
+\section{Tinjauan Pustaka}
+
+\subsection{Metodologi Perbandingan dalam Deep Learning}
+
+Perbandingan yang valid antara arsitektur deep learning menghadapi tantangan unik yang tidak dijumpai dalam ilmu pengetahuan tradisional. \citet{henderson2018deep} dalam studi seminal "Deep Reinforcement Learning that Matters" mendokumentasikan krisis reproduksibilitas dalam reinforcement learning, sementara \citet{lucic2018gans} mengungkap inkonsistensi evaluasi dalam model generatif melalui penelitian "Are GANs Created Equal?".
+
+Kerangka kerja statistik untuk perbandingan klasifikator telah dikembangkan secara komprehensif oleh \citet{demsar2006statistical}, yang menyediakan standar emas dengan diagram Critical Difference untuk visualisasi signifikansi statistik yang intuitif. Pendekatan ini telah diadopsi secara luas sebagai metodologi standar untuk perbandingan multipel algoritma pembelajaran mesin.
+
+\subsection{Kebocoran Data dan Bias Metodologis}
+
+\citet{kapoor2022leakage} mengidentifikasi masalah kebocoran data yang sistematis dalam 294 makalah penelitian pembelajaran mesin, di mana koreksi terhadap kebocoran tersebut mengeliminasi klaim peningkatan performa dibandingkan metode tradisional. Bentuk-bentuk kebocoran data yang umum meliputi seleksi fitur menggunakan seluruh dataset, reduksi dimensionalitas yang diterapkan sebelum pembagian train/test, optimasi parameter menggunakan data test, dan early stopping berdasarkan validation set yang kemudian digunakan untuk pelaporan performa.
+
+Penelitian oleh \citet{patil2022statistical} mengusulkan pengujian statistik untuk mendeteksi bias confounding menggunakan permutasi kondisional dan model aditif umum. Pendekatan ini memberikan kerangka kerja sistematis untuk mengontrol faktor-faktor perancu dalam eksperimen pembelajaran mesin.
+
+\subsection{Standar Reproduksibilitas}
+
+\citet{pineau2021improving} mengembangkan standar reproduksibilitas untuk pembelajaran mesin dalam ilmu kehidupan, yang mengimplementasikan kerangka kerja bertingkat bronze-silver-gold. Tingkat bronze mensyaratkan ketersediaan publik data, model, dan kode dalam repositori yang persisten. Tingkat silver menambahkan instalasi dependensi satu perintah dan generasi angka acak yang deterministik. Tingkat gold menyediakan otomasi penuh dengan sistem manajemen workflow yang memungkinkan reproduksi analisis lengkap dengan satu perintah.
+
+\section{Metodologi}
+
+Penelitian ini menggunakan pendekatan tinjauan sistematis terhadap literatur akademik dan standar konferensi internasional. Pencarian literatur dilakukan pada basis data akademik utama dengan fokus pada metodologi perbandingan arsitektur deep learning, praktik terbaik evaluasi model, dan standar reproduksibilitas dalam pembelajaran mesin.
+
+Kriteria inklusi meliputi: (1) publikasi dalam konferensi atau jurnal bereputasi tinggi, (2) fokus pada metodologi eksperimen dalam deep learning, (3) kontribusi terhadap standar evaluasi atau reproduksibilitas, dan (4) publikasi dalam 10 tahun terakhir untuk memastikan relevansi dengan praktik penelitian terkini.
+
+\section{Pembahasan}
+
+\subsection{Fungsi Loss Standar versus Adaptif}
+
+Penggunaan fungsi loss standar sebagai metrik perbandingan utama direkomendasikan berdasarkan prinsip-prinsip teoritis dan praktis. Cross-entropy untuk klasifikasi dan Mean Squared Error (MSE) untuk regresi menyediakan baseline yang konsisten yang memungkinkan evaluasi yang adil antara arsitektur berbeda yang dirancang untuk tugas fundamental yang sama.
+
+Fondasi teoretis mendukung pendekatan ini melalui penelitian \citet{mao2023theoretical} yang menyediakan batas H-konsistensi untuk cross-entropy dan "comp-sum losses," menetapkan jaminan teoritis untuk penggunaannya sebagai surrogate loss dalam jaringan neural. Dukungan matematis ini memperkuat cross-entropy dan MSE sebagai standar yang dapat diandalkan untuk perbandingan yang adil.
+
+Fungsi loss adaptif dapat menimbulkan bias dalam perbandingan terhadap arsitektur yang secara khusus diuntungkan oleh properti-propertinya. Sebagai contoh, penggunaan Focal Loss yang dirancang untuk dataset tidak seimbang ketika membandingkan arsitektur general-purpose dapat menyesatkan kesimpulan tentang superioritas arsitektural. Penelitian oleh \citet{wang2022comprehensive} menunjukkan bahwa model kompleks menunjukkan peningkatan yang lebih kecil dari perubahan fungsi loss dibandingkan model sederhana, menciptakan bias sistematis ketika menggunakan loss khusus.
+
+\subsection{Prinsip Desain Eksperimen untuk Perbandingan yang Adil}
+
+Desain eksperimen dalam pembelajaran mesin harus mengatasi tantangan unik yang mencakup kontrol terhadap variabilitas inheren dan pemeliharaan kondisi eksperimental yang identik. Persyaratan desain kritis meliputi pipeline preprocessing data yang identik, pembagian train/validation/test yang konsisten menggunakan stratified sampling, prosedur optimasi hiperparameter yang seragam, dan protokol evaluasi yang standar.
+
+\citet{heil2021reproducibility} mendemonstrasikan bahwa mengontrol randomness melalui seeding yang tepat sangat penting namun tidak cukup - model harus dipublikasikan bersama dengan kode lengkap untuk reproduksibilitas sejati. Pencegahan kebocoran data menjadi paramount, dengan bentuk-bentuk umum yang telah diidentifikasi oleh \citet{kapoor2022leakage}.
+
+Persyaratan kekakuan statistik mencakup penggunaan uji non-parametrik (Wilcoxon signed-rank untuk perbandingan berpasangan, uji Friedman untuk algoritma multipel). Kerangka kerja \citet{demsar2006statistical} menyediakan standar emas dengan diagram Critical Difference untuk visualisasi signifikansi statistik yang intuitif.
+
+\subsection{Standar Akademik dan Industri}
+
+Konferensi pembelajaran mesin utama telah mengimplementasikan kerangka kerja evaluasi komprehensif melalui persyaratan wajib dan inisiatif sistematis. NeurIPS, ICML, ICLR, dan AAAI semuanya mensyaratkan checklist reproduksibilitas yang detail mencakup ketersediaan kode, pengujian signifikansi statistik, sumber daya komputasional, dan pernyataan keterbatasan.
+
+Tantangan reproduksibilitas yang disponsori konferensi menyediakan validasi sistematis. NeurIPS Reproducibility Challenge tahunan dan ML Reproducibility Challenge yang diperluas mencakup 7-15 konferensi utama secara konsisten mengungkap sekitar 30\% makalah memiliki masalah reproduksibilitas. Inisiatif-inisiatif ini telah menghasilkan peningkatan konkret dalam standar penelitian melalui keterlibatan komunitas.
+
+Praktik industri menetapkan standar tinggi untuk kekakuan evaluasi. Google/DeepMind mensyaratkan multiple random seeds (minimum 5-10 runs), protokol tuning hiperparameter yang sistematis, dan verifikasi reproduksibilitas internal sebelum publikasi. Kerangka kerja Evals OpenAI menyediakan protokol evaluasi model-agnostik yang terintegrasi dengan sistem pengujian otomatis.
+
+\subsection{Interaksi Arsitektur-Loss dan Validitas Perbandingan}
+
+Interaksi arsitektur-loss secara signifikan memengaruhi validitas perbandingan. Arsitektur yang berbeda memiliki sensitivitas yang bervariasi terhadap fungsi loss spesifik, dengan beberapa menunjukkan kolaps performa di bawah formulasi tertentu. Penelitian menunjukkan bahwa pilihan fungsi loss memengaruhi navigasi landscape optimasi secara berbeda di antara keluarga arsitektural.
+
+Analisis teoretis mengungkap bahwa arsitektur berbeda menciptakan landscape optimasi yang berbeda dengan fungsi loss yang sama. Analisis gradient flow menunjukkan skip connections dan lapisan normalisasi berinteraksi secara berbeda dengan berbagai formulasi loss, memengaruhi batas generalisasi di seluruh kombinasi arsitektur-loss.
+
+Pertimbangan sensitivitas skala menjadi kritis - MSE lebih sensitif terhadap outlier dan scaling dibandingkan MAE, berpotensi menguntungkan arsitektur yang robust. Hal ini menciptakan bias sistematis yang harus diperhitungkan melalui seleksi metrik yang hati-hati dan analisis sensitivitas di berbagai formulasi loss.
+
+\section{Rekomendasi dan Implementasi}
+
+Berdasarkan sintesis literatur dan analisis praktik terbaik, artikel ini merekomendasikan implementasi kerangka kerja evaluasi berlapis yang mencakup:
+
+\textbf{Tingkat Metrik:} Gunakan fungsi loss standar (cross-entropy, MSE) sebagai metrik perbandingan utama dengan melaporkan metrik multipel termasuk loss yang sesuai tugas. Pendekatan ini menyediakan baseline evaluasi yang adil sambil menangkap karakteristik performa khusus yang relevan untuk aplikasi spesifik.
+
+\textbf{Tingkat Eksperimental:} Implementasikan kontrol yang ketat terhadap faktor perancu melalui pengujian independensi kondisional dan desain eksperimen multi-faktor. Variabel kunci meliputi sumber daya komputasional, perbedaan hardware, dependensi versi software, variasi random seed, dan variasi preprocessing data.
+
+\textbf{Tingkat Statistik:} Terapkan pengujian statistik non-parametrik dengan pelaporan error yang tepat dari multiple runs. Studi menunjukkan random seed yang berbeda dapat menghasilkan perbedaan akurasi 2-3\%, seringkali lebih besar dari peningkatan yang diklaim antara metode.
+
+\textbf{Tingkat Reproduksibilitas:} Adopsi standar reproduksibilitas bertingkat bronze-silver-gold dengan dokumentasi lengkap terhadap optimasi hiperparameter dan penerapan konsisten di seluruh model yang dibandingkan.
+
+\section{Kesimpulan}
+
+Bukti secara kuat mendukung penggunaan fungsi loss standar sebagai metrik perbandingan utama sambil mengimplementasikan prinsip-prinsip desain eksperimen yang ketat yang telah mapan dalam literatur akademik dan standar konferensi. Meskipun kerangka kerja metodologis yang signifikan telah tersedia, adopsi yang luas masih terbatas, dengan kebocoran data, pengujian statistik yang tidak memadai, dan reproduksibilitas yang buruk menjadi masalah yang pervasif.
+
+Implementasi kerangka kerja reproduksibilitas bronze-silver-gold, dikombinasikan dengan pengujian statistik yang tepat menggunakan metode non-parametrik dan kontrol terhadap faktor perancu, akan secara signifikan meningkatkan reliabilitas hasil penelitian deep learning. Upaya aktif bidang ini melalui tantangan reproduksibilitas, benchmark standar, dan checklist evaluasi wajib menunjukkan kemajuan menuju perbandingan model yang lebih dapat dipercaya yang memajukan pengetahuan ilmiah daripada menghasilkan kesimpulan yang menyesatkan.
+
+Penelitian masa depan harus fokus pada pengembangan framework otomatis untuk deteksi bias metodologis, standardisasi protokol evaluasi lintas domain aplikasi, dan integrasi prinsip-prinsip etika dalam praktik perbandingan arsitektur. Adopsi yang luas dari praktik-praktik yang direkomendasikan dalam artikel ini akan berkontribusi terhadap kemajuan yang berkelanjutan dalam kualitas dan reliabilitas penelitian deep learning.
+
+\bibliographystyle{apalike}
+\bibliography{references}
+
+\end{document}

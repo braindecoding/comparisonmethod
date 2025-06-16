@@ -1,0 +1,122 @@
+name: Build LaTeX Paper
+
+on:
+  push:
+    branches: [ main, master ]
+    paths:
+      - '*.tex'
+      - '*.bib'
+      - '.github/workflows/*.yml'
+  pull_request:
+    branches: [ main, master ]
+    paths:
+      - '*.tex'
+      - '*.bib'
+  workflow_dispatch: # Allows manual trigger
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Install TeXlive
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y texlive-full
+        
+    - name: List LaTeX files
+      run: |
+        echo "Found .tex files:"
+        find . -name "*.tex" -type f
+        echo "Found .bib files:"
+        find . -name "*.bib" -type f
+        
+    - name: Compile LaTeX document
+      run: |
+        # Find the main .tex file (assuming it contains \documentclass)
+        MAIN_TEX=$(grep -l "\\documentclass" *.tex | head -1)
+        if [ -z "$MAIN_TEX" ]; then
+          echo "No main .tex file found with \\documentclass"
+          exit 1
+        fi
+        
+        echo "Compiling main file: $MAIN_TEX"
+        BASENAME=$(basename "$MAIN_TEX" .tex)
+        
+        # First compilation
+        pdflatex -interaction=nonstopmode "$MAIN_TEX"
+        
+        # Check if .bib file exists and run bibtex
+        if ls *.bib 1> /dev/null 2>&1; then
+          echo "Found bibliography files, running bibtex..."
+          bibtex "$BASENAME"
+          
+          # Second compilation after bibtex
+          pdflatex -interaction=nonstopmode "$MAIN_TEX"
+          
+          # Third compilation to resolve all references
+          pdflatex -interaction=nonstopmode "$MAIN_TEX"
+        else
+          echo "No .bib files found, skipping bibtex"
+          # Second compilation for cross-references
+          pdflatex -interaction=nonstopmode "$MAIN_TEX"
+        fi
+        
+        # Check if PDF was created successfully
+        if [ -f "$BASENAME.pdf" ]; then
+          echo "✅ PDF compiled successfully: $BASENAME.pdf"
+          # Rename to include timestamp for versioning
+          TIMESTAMP=$(date +"%Y%m%d_%H%M%S")
+          cp "$BASENAME.pdf" "${BASENAME}_${TIMESTAMP}.pdf"
+        else
+          echo "❌ PDF compilation failed"
+          exit 1
+        fi
+        
+    - name: Check for compilation errors
+      run: |
+        # Look for common error indicators in log files
+        if ls *.log 1> /dev/null 2>&1; then
+          echo "Checking log files for errors..."
+          for logfile in *.log; do
+            if grep -q "Emergency stop\|Fatal error\|! LaTeX Error" "$logfile"; then
+              echo "❌ Errors found in $logfile:"
+              grep "Emergency stop\|Fatal error\|! LaTeX Error" "$logfile"
+              exit 1
+            fi
+          done
+          echo "✅ No critical errors found in log files"
+        fi
+        
+    - name: Upload PDF artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: latex-pdf-${{ github.sha }}
+        path: |
+          *.pdf
+        retention-days: 30
+        
+    - name: Upload logs for debugging
+      uses: actions/upload-artifact@v4
+      if: always() # Upload logs even if compilation fails
+      with:
+        name: latex-logs-${{ github.sha }}
+        path: |
+          *.log
+          *.aux
+          *.bbl
+          *.blg
+        retention-days: 7
+
+    # Optional: Create release with PDF on tag push
+    - name: Create Release
+      if: startsWith(github.ref, 'refs/tags/v')
+      uses: softprops/action-gh-release@v1
+      with:
+        files: "*.pdf"
+        generate_release_notes: true
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
